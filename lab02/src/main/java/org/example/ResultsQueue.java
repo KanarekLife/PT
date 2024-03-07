@@ -5,14 +5,14 @@ import java.util.Queue;
 import java.util.LinkedList;
 
 public class ResultsQueue {
-    private final Queue<Result> results = new LinkedList<>();
+    private final Queue<CalculatePiCommandResult> results = new LinkedList<>();
 
-    public synchronized void addResult(Result result) {
+    public synchronized void addResult(CalculatePiCommandResult result) {
         results.add(result);
         notify();
     }
 
-    public synchronized Optional<Result> getResult() {
+    public synchronized Optional<CalculatePiCommandResult> getResult() {
         while (results.isEmpty()) {
             try {
                 wait();
@@ -22,5 +22,9 @@ public class ResultsQueue {
             }
         }
         return Optional.of(results.poll());
+    }
+
+    public synchronized boolean any() {
+        return results.peek() != null;
     }
 }

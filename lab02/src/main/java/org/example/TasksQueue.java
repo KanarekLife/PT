@@ -5,22 +5,24 @@ import java.util.Optional;
 import java.util.Queue;
 
 public class TasksQueue {
-    private final Queue<Integer> numbersToCalculate = new LinkedList<>();
+    private final Queue<CalculatePiCommand> commands = new LinkedList<>();
+    private int _lastTaskId = 0;
 
-    public synchronized void addNumberToCalculate(int n) {
-        numbersToCalculate.add(n);
+    public synchronized void schedulePiCalculation(long n) {
+        commands.add(new CalculatePiCommand(_lastTaskId, n));
+        _lastTaskId++;
         notify();
     }
 
-    public synchronized Optional<Integer> getNumberToCalculate() {
-        while (numbersToCalculate.isEmpty()) {
+    public synchronized Optional<CalculatePiCommand> getCalculatePiCommand() {
+        while (commands.isEmpty()) {
             try {
                 wait();
-            } catch (InterruptedException e) {
+            } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
                 return Optional.empty();
             }
         }
-        return Optional.of(numbersToCalculate.poll());
+        return Optional.of(commands.poll());
     }
 }

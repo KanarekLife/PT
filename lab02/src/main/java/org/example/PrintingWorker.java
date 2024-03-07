@@ -10,11 +10,25 @@ public class PrintingWorker implements Runnable {
     @Override
     public void run() {
         while (true) {
-            var result = resultsQueue.getResult();
-            if (result.isEmpty()) {
-                return;
+            try {
+                Thread.sleep(1);
+                var result = resultsQueue.getResult();
+                if (result.isEmpty()) {
+                    continue;
+                }
+                System.out.println(result.get().toString());
+            } catch(InterruptedException ex) {
+                while (resultsQueue.any()) {
+                    var result = resultsQueue.getResult();
+                    if (result.isEmpty()) {
+                        System.out.println("Exiting printer worker");
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
+                    System.out.println(result.get().toString());
+                }
+                break;
             }
-            System.out.println("[✔] Result for n = " + result.get().number() + " is " + (result.get().isPrime() ? "prime" : "not prime") + " (calculated by worker " + result.get().workerId() + ")");
         }
     }
 }
