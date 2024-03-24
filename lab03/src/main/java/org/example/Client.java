@@ -6,10 +6,8 @@ import java.net.Socket;
 public class Client {
     public static void main(String[] args) {
         try {
-            // Connect to the server
             Socket socket = new Socket("localhost", 1234);
 
-            // Create input and output streams for the socket
             var output = new ObjectOutputStream(socket.getOutputStream());
             var input = new ObjectInputStream(socket.getInputStream());
 
@@ -31,7 +29,6 @@ public class Client {
             System.out.printf("Server says: %s%n", input.readObject());
             System.out.printf("Closing connection to server at %s:%d%n", socket.getInetAddress(), socket.getPort());
 
-            // Close the socket and streams
             input.close();
             output.close();
             socket.close();

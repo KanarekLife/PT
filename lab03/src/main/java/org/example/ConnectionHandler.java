@@ -27,7 +27,7 @@ public class ConnectionHandler implements Runnable {
                 outputStream.writeObject("ready for messages");
                 for (int i = 0; i < n; i++) {
                     Message message = (Message) inputStream.readObject();
-                    System.out.println("Received message: " + message);
+                    System.out.println("Received message from %s:%d: ".formatted(clientSocket.getInetAddress(), clientSocket.getPort()) + message);
                 }
                 outputStream.writeObject("finished");
                 System.out.printf("Connection to client at %s:%d closed%n", clientSocket.getInetAddress(), clientSocket.getPort());

@@ -24,6 +24,7 @@ public class Mage {
     public void setTower(Tower tower) {
         this.tower = tower;
     }
+    public Tower getTower() { return this.tower; }
 
     @Override
     public String toString() {

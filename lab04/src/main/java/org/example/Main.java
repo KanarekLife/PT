@@ -21,14 +21,22 @@ public class Main {
         session.beginTransaction();
         var mage1 = new Mage("Gandalf", 100);
         var mage2 = new Mage("Saruman", 100);
+        var mage3 = new Mage("John", 2137);
+        var mage4 = new Mage("Mike", 10);
         var tower1 = new Tower("Orthanc", 100);
+        var tower2 = new Tower("Minas Morgul", 100);
         tower1.addMage(mage1);
         mage1.setTower(tower1);
         tower1.addMage(mage2);
         mage2.setTower(tower1);
-        var tower2 = new Tower("Minas Morgul", 100);
+        tower1.addMage(mage4);
+        mage4.setTower(tower1);
+        tower2.addMage(mage3);
+        mage3.setTower(tower2);
         session.persist(mage1);
         session.persist(mage2);
+        session.persist(mage3);
+        session.persist(mage4);
         session.persist(tower1);
         session.persist(tower2);
         session.getTransaction().commit();
@@ -50,79 +58,124 @@ public class Main {
                 System.out.println("add-tower - add a tower");
                 System.out.println("add-mage-to-tower - add a mage to a tower");
                 System.out.println("remove-mage-from-tower - remove a mage from a tower");
-                System.out.println("strong-mages - list all mages with level > 50");
+                System.out.println("remove-mage - remove a mage");
+                System.out.println("remove-tower - remove a tower");
+                System.out.println("strong-mages-from-tower - list all mages with level > 50 from tower");
                 System.out.println("exit - exit the program");
                 var command = scanner.nextLine();
-                if (command.equals("exit")) {
-                    shouldRun = false;
-                }else if (command.equals("list")) {
-                    var session = sessionFactory.openSession();
-                    var mages = session.createQuery("from Mage", Mage.class).list();
-                    var towers = session.createQuery("from Tower", Tower.class).list();
-                    System.out.println("Mages: ");
-                    mages.forEach(System.out::println);
-                    System.out.println("Towers: ");
-                    towers.forEach(System.out::println);
-                    session.close();
-                } else if (command.equals("add-mage")) {
-                    var session = sessionFactory.openSession();
-                    session.beginTransaction();
-                    System.out.println("Enter mage name: ");
-                    var mageName = scanner.nextLine();
-                    System.out.println("Enter mage level: ");
-                    var mageLevel = scanner.nextInt();
-                    scanner.nextLine();
-                    var mage = new Mage(mageName, mageLevel);
-                    session.persist(mage);
-                    session.getTransaction().commit();
-                    session.close();
-                } else if (command.equals("add-tower")) {
-                    var session = sessionFactory.openSession();
-                    session.beginTransaction();
-                    System.out.println("Enter tower name: ");
-                    var towerName = scanner.nextLine();
-                    System.out.println("Enter tower height: ");
-                    var towerHeight = scanner.nextInt();
-                    scanner.nextLine();
-                    var tower = new Tower(towerName, towerHeight);
-                    session.persist(tower);
-                    session.getTransaction().commit();
-                    session.close();
-                } else if (command.equals("add-mage-to-tower")) {
-                    var session = sessionFactory.openSession();
-                    session.beginTransaction();
-                    System.out.println("Enter mage name: ");
-                    var mageName = scanner.nextLine();
-                    var mage = session.get(Mage.class, mageName);
-                    System.out.println("Enter tower name: ");
-                    var towerName = scanner.nextLine();
-                    var tower = session.get(Tower.class, towerName);
-                    tower.addMage(mage);
-                    mage.setTower(tower);
-                    session.persist(tower);
-                    session.getTransaction().commit();
-                    session.close();
-                } else if (command.equals("remove-mage-from-tower")) {
-                    var session = sessionFactory.openSession();
-                    session.beginTransaction();
-                    System.out.println("Enter mage name: ");
-                    var mageName = scanner.nextLine();
-                    var mage = session.get(Mage.class, mageName);
-                    System.out.println("Enter tower name: ");
-                    var towerName = scanner.nextLine();
-                    var tower = session.get(Tower.class, towerName);
-                    tower.removeMage(mage);
-                    mage.setTower(null);
-                    session.persist(tower);
-                    session.getTransaction().commit();
-                    session.close();
-                } else if (command.equals("strong-mages")){
-                    var session = sessionFactory.openSession();
-                    session.beginTransaction();
-                    session.createQuery("from Mage where level > 50", Mage.class).list().forEach(System.out::println);
-                }
-                else {
-                    System.out.println("Unknown command");
+                switch (command) {
+                    case "exit" -> shouldRun = false;
+                    case "list" -> {
+                        var session = sessionFactory.openSession();
+                        var mages = session.createQuery("from Mage", Mage.class).list();
+                        var towers = session.createQuery("from Tower", Tower.class).list();
+                        System.out.println("Mages: ");
+                        mages.forEach(System.out::println);
+                        System.out.println("Towers: ");
+                        towers.forEach(System.out::println);
+                        session.close();
+                    }
+                    case "add-mage" -> {
+                        var session = sessionFactory.openSession();
+                        session.beginTransaction();
+                        System.out.println("Enter mage name: ");
+                        var mageName = scanner.nextLine();
+                        System.out.println("Enter mage level: ");
+                        var mageLevel = scanner.nextInt();
+                        scanner.nextLine();
+                        var mage = new Mage(mageName, mageLevel);
+                        session.persist(mage);
+                        session.getTransaction().commit();
+                        session.close();
+                    }
+                    case "add-tower" -> {
+                        var session = sessionFactory.openSession();
+                        session.beginTransaction();
+                        System.out.println("Enter tower name: ");
+                        var towerName = scanner.nextLine();
+                        System.out.println("Enter tower height: ");
+                        var towerHeight = scanner.nextInt();
+                        scanner.nextLine();
+                        var tower = new Tower(towerName, towerHeight);
+                        session.persist(tower);
+                        session.getTransaction().commit();
+                        session.close();
+                    }
+                    case "add-mage-to-tower" -> {
+                        var session = sessionFactory.openSession();
+                        session.beginTransaction();
+                        System.out.println("Enter mage name: ");
+                        var mageName = scanner.nextLine();
+                        var mage = session.get(Mage.class, mageName);
+                        System.out.println("Enter tower name: ");
+                        var towerName = scanner.nextLine();
+                        var tower = session.get(Tower.class, towerName);
+                        tower.addMage(mage);
+                        mage.setTower(tower);
+                        session.persist(tower);
+                        session.getTransaction().commit();
+                        session.close();
+                    }
+                    case "remove-mage-from-tower" -> {
+                        var session = sessionFactory.openSession();
+                        session.beginTransaction();
+                        System.out.println("Enter mage name: ");
+                        var mageName = scanner.nextLine();
+                        var mage = session.get(Mage.class, mageName);
+                        System.out.println("Enter tower name: ");
+                        var towerName = scanner.nextLine();
+                        var tower = session.get(Tower.class, towerName);
+                        tower.removeMage(mage);
+                        mage.setTower(null);
+                        session.persist(tower);
+                        session.getTransaction().commit();
+                        session.close();
+                    }
+                    case "remove-mage" -> {
+                        System.out.println("Enter mage name: ");
+                        var mageName = scanner.nextLine();
+                        var session = sessionFactory.openSession();
+                        session.beginTransaction();
+                        var mage = session.get(Mage.class, mageName);
+                        var tower = mage.getTower();
+                        if (tower != null) {
+                            tower.removeMage(mage);
+                            session.persist(tower);
+                        }
+                        session.remove(mage);
+                        session.getTransaction().commit();
+                        session.close();
+                    }
+                    case "remove-tower" -> {
+                        System.out.println("Enter tower name: ");
+                        var towerName = scanner.nextLine();
+                        var session = sessionFactory.openSession();
+                        session.beginTransaction();
+                        var tower = session.get(Tower.class, towerName);
+                        for (var mage: tower.getMages()) {
+                            mage.setTower(null);
+                            session.persist(mage);
+                        }
+                        session.remove(tower);
+                        session.getTransaction().commit();
+                        session.close();
+                    }
+                    case "strong-mages-from-tower" -> {
+                        System.out.println("Enter tower name: ");
+                        var towerName = scanner.nextLine();
+                        System.out.println("Min level:");
+                        var level = Integer.parseInt(scanner.nextLine());
+                        var session = sessionFactory.openSession();
+                        session.beginTransaction();
+                        var tower = session.get(Tower.class, towerName);
+                        session.createQuery("from Mage where level > :level and tower = :searched_tower", Mage.class)
+                                .setParameter("level", level)
+                                .setParameter("searched_tower", tower)
+                                .list()
+                                .forEach(System.out::println);
+                        session.close();
+                    }
+                    default -> System.out.println("Unknown command");
                 }
             }
 
