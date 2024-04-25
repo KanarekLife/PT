@@ -28,6 +28,8 @@ public partial class CreateFileWindow : Window
         if (isFile == true && !Regex.IsMatch(name, @"^[a-zA-Z0-9_~-]{1,8}\.(txt|php|html)$"))
         {
             MessageBox.Show("Invalid file name", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            Close();
+            return;
         }
 
         if (isFile == false)
