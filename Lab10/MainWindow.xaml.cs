@@ -10,6 +10,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Lab10.Core;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using MessageBox = System.Windows.MessageBox;
 
 namespace Lab10;
@@ -31,7 +32,7 @@ public partial class MainWindow : Window
 
     private List<Car> _tempCars;
     private BindingList<Car> _myCarsBindingList;
-    private readonly SearchableAndSortableBindingList _carList = new SearchableAndSortableBindingList(MyCars);
+    private SearchableAndSortableBindingList _carList = new SearchableAndSortableBindingList(MyCars);
 
 
     public MainWindow()
@@ -52,9 +53,7 @@ public partial class MainWindow : Window
     private void BindDataToGrid(List<Car> cars)
     {
         _myCarsBindingList = new BindingList<Car>(cars);
-        var carBindingSource = new BindingSource();
-        carBindingSource.DataSource = _myCarsBindingList;
-        CarsDataGrid.ItemsSource = carBindingSource;
+        CarsDataGrid.ItemsSource = _myCarsBindingList;
     }
 
     private static void Task02()
@@ -91,13 +90,22 @@ public partial class MainWindow : Window
         MessageBox.Show("2. Model: " + a.Model + " Silnik: " + a.Motor + " Rok: " + a.Year);
     }
 
-    public void HandleKeyPress(object sender, System.Windows.Input.KeyEventArgs e)
+    public void HandleKeyPress(object sender, KeyEventArgs e)
     {
+        if (e.Key != Key.Delete)
+        {
+            return;
+        }
+
+        _tempCars = _carList.ToList().Where(x => x != (Car)(sender as DataGrid).SelectedItem).ToList();
+        _carList = new SearchableAndSortableBindingList(_tempCars);
+        BindDataToGrid(_tempCars);
     }
 
     private void Search_Button(object sender, RoutedEventArgs e)
     {
         var query = SearchTextBox.Text;
+        if (ComboBox.SelectedItem is null) return;
         var property = ComboBox.SelectedItem.ToString();
 
         _tempCars = _carList.Find(query, property);
@@ -114,6 +122,7 @@ public partial class MainWindow : Window
 
         
         _tempCars = _carList.AddElement(model, engineModel, horsepower, displacement, year);
+        _carList = new SearchableAndSortableBindingList(_tempCars);
         BindDataToGrid(_tempCars);
     }
 
@@ -173,5 +182,10 @@ public partial class MainWindow : Window
     {
         _tempCars = _carList.Sort("Motor");
         BindDataToGrid(_tempCars);
+    }
+
+    private void Reset_Button(object sender, RoutedEventArgs e)
+    {
+        BindDataToGrid(_carList.ToList());
     }
 }

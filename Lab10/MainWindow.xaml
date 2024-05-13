@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" Padding="20">
     <DockPanel>
-        <TextBox DockPanel.Dock="Top" FontSize="24">Lab10</TextBox>
+        <TextBlock DockPanel.Dock="Top" FontSize="24">Lab10</TextBlock>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="512"></ColumnDefinition>
@@ -20,6 +20,7 @@
                     <Label Content="Search in:" Height="25" VerticalAlignment="Top" />
                     <ComboBox Height="25" Margin="0" VerticalAlignment="Top" Width="120" Name="ComboBox" />
                     <Button Content="Search" Height="25" VerticalAlignment="Top" Width="75" Click="Search_Button" />
+                    <Button Content="Reset" Height="25" VerticalAlignment="top" Width="75" Click="Reset_Button" />
                 </ToolBar>
                 <DataGrid x:Name="CarsDataGrid" AutoGenerateColumns="True" PreviewKeyDown="HandleKeyPress" />
             </DockPanel>
