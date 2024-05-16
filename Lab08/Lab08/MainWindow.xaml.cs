@@ -37,9 +37,7 @@ public partial class MainWindow : Window
             UseDescriptionForTitle = true
         };
         
-        var win32Parent = new NativeWindow();
-        win32Parent.AssignHandle(new WindowInteropHelper(this).Handle);
-        var result = dlg.ShowDialog(win32Parent);
+        var result = dlg.ShowDialog();
         
         if (result != System.Windows.Forms.DialogResult.OK)
         {
@@ -49,6 +47,7 @@ public partial class MainWindow : Window
         if (!Directory.Exists(dlg.SelectedPath))
         {
             MessageBox.Show(this, "Invalid path selected", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
         }
 
         _currentDirectory = new DirectoryInfo(dlg.SelectedPath);
@@ -229,10 +228,9 @@ public partial class MainWindow : Window
             {
                 File.SetAttributes(file, File.GetAttributes(file) & ~FileAttributes.ReadOnly);
             }
-            
-            File.Delete(file);
         }
-        Directory.Delete(path);
+        
+        Directory.Delete(path, true);
         DisplayFiles();
     }
 
