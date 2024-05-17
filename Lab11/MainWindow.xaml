@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lab11"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <DockPanel>
-        <TextBlock DockPanel.Dock="Top" FontSize="24" Margin="8 0">Lab 11</TextBlock>
-        <Grid Height="120">
+        Title="MainWindow" Height="700" Width="800">
+    <StackPanel Orientation="Vertical">
+        <TextBlock FontSize="24" Margin="8 0">Lab 11</TextBlock>
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"></ColumnDefinition>
                 <ColumnDefinition Width="1*"></ColumnDefinition>
@@ -54,5 +54,52 @@
                 <TextBox x:Name="AsyncAwaitResultTextBox" Grid.Column="1" Width="240" IsReadOnly="True" VerticalContentAlignment="Center"></TextBox>
             </Grid>
         </Grid>
-    </DockPanel>
+        <Grid Margin="0 20 0 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical">
+                <TextBlock>Fibonacci</TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <Label Margin="10 0 0 0">i</Label>
+                    <TextBox x:Name="FibonacciITextBox" Width="230" VerticalAlignment="Center">10</TextBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Click="CalculateFibonacciButton_OnClick" VerticalContentAlignment="Center" Padding="20 0" Margin="10 0 10 0">GET</Button>
+                    <TextBox x:Name="FibonacciResultTextBox" Width="170" IsReadOnly="True" VerticalContentAlignment="Center"></TextBox>
+                </StackPanel>
+                <ProgressBar Margin="10 20" x:Name="FibonacciProgressBar" Width="240" Height="10" Value="0" HorizontalAlignment="Left"></ProgressBar>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Vertical">
+                <TextBlock>Kompresja</TextBlock>
+                <StackPanel Margin="0 20 0 0" Orientation="Horizontal">
+                    <Button Click="CompressFiles_OnClick" Margin="0 0 20 0" VerticalContentAlignment="Center" Padding="20 0">Compress</Button>
+                    <Button Click="DecompressFiles_OnClick" VerticalContentAlignment="Center" Padding="20 0">Decompress</Button>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        <Grid Margin="0 20 0 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <Label Margin="10 0 20 0">DNS</Label>
+                    <Button Click="ResolveDns_OnClick" VerticalContentAlignment="Center" Padding="20 0">Resolve</Button>
+                </StackPanel>
+                <ScrollViewer Height="300" Margin="10" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <TextBox x:Name="DnsResultTextBox" IsReadOnly="True"></TextBox>
+                </ScrollViewer>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <Label Margin="10 0 20 0">Responsywność</Label>
+                    <Button VerticalContentAlignment="Center" Padding="20 0">Check</Button>
+                </StackPanel>
+                <TextBox x:Name="ReponseResultTextBox" IsReadOnly="True" Width="240" Margin="0 20 130 0"></TextBox>
+            </StackPanel>
+        </Grid>
+    </StackPanel>
 </Window>
